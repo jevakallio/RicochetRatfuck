@@ -6,14 +6,16 @@ import Cell from './Cell';
 import type { Grid as GridType } from '../types';
 
 type Props = {
-  grid: GridType
+  grid: GridType,
+  currentGoalIndex: number,
+  currentGoalRat: number
 };
 
 const screen = Dimensions.get('window');
 
 export default class Grid extends React.Component<Props, *> {
   render() {
-    const { grid } = this.props;
+    const { grid, currentGoalIndex, currentGoalRat } = this.props;
     const cellSize = screen.width * 0.8 / grid.length;
     return (
       <View style={styles.container}>
@@ -21,6 +23,7 @@ export default class Grid extends React.Component<Props, *> {
           <View key={r} style={styles.row}>
             {row.map((cell, c) => (
               <Cell
+                goalRat={cell.goal === currentGoalIndex ? currentGoalRat : null}
                 key={c}
                 row={r}
                 col={c}

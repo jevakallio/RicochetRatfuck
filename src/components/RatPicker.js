@@ -1,43 +1,30 @@
 // @flow
 
 import React from 'react';
-import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
-
-import Rat from './Rat';
-import {
-  getRatColor,
-  getUnselectedRatIcon,
-  getSelectedRatIcon
-} from '../colors';
+import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import RatPickerItem from './RatPickerItem';
 import type { Cell as CellType } from '../types';
 
 type Props = {
   rats: number[],
+  points: number[],
   selected: number,
   onSelect: number => void
 };
 
 export default class RatPicker extends React.Component<Props, *> {
   render() {
-    const { selected, rats } = this.props;
+    const { selected, rats, points } = this.props;
     return (
       <View style={styles.container}>
         {rats.map(id => (
-          <TouchableOpacity
+          <RatPickerItem
             key={id}
-            style={styles.button}
-            activeOpacity={0.6}
-            onPress={() => this.props.onSelect(id)}
-          >
-            <Image
-              style={styles.rat}
-              source={
-                id === selected
-                  ? getSelectedRatIcon(id)
-                  : getUnselectedRatIcon(id)
-              }
-            />
-          </TouchableOpacity>
+            id={id}
+            points={points[id]}
+            isSelected={id === selected}
+            onSelect={this.props.onSelect}
+          />
         ))}
       </View>
     );
@@ -50,15 +37,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     justifyContent: 'space-between',
     marginBottom: 40
-  },
-  button: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 15
-  },
-  rat: {
-    height: 40,
-    width: 60,
-    resizeMode: 'contain'
   }
 });

@@ -1,19 +1,20 @@
 // @flow
 
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import ControlTriangle from './ControlTriangle';
 import type { Direction } from '../types';
 
 type Props = {
   color: string,
+  points: number,
   onDirectionPress: Direction => void
 };
 
 const Placeholder = () => <View style={{ flex: 1 }} />;
 export default class Rat extends React.Component<Props, *> {
   render() {
-    const { color, onDirectionPress } = this.props;
+    const { color, points, onDirectionPress } = this.props;
     return (
       <View style={styles.container}>
         <View style={styles.row}>
@@ -32,7 +33,10 @@ export default class Rat extends React.Component<Props, *> {
             onPress={() => onDirectionPress('left')}
             rotate={-90}
           />
-          <Placeholder />
+          <View style={styles.points}>
+            <Text style={[styles.pointsText, { color: color }]}>{points}</Text>
+            <Text style={[styles.pointsLabel, { color: color }]}>seconds</Text>
+          </View>
           <ControlTriangle
             color={color}
             onPress={() => onDirectionPress('right')}
@@ -63,5 +67,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around'
+  },
+  points: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  pointsText: {
+    fontFamily: 'Pixeled',
+    fontSize: 18
+  },
+  pointsLabel: {
+    fontFamily: 'Pixeled',
+    fontSize: 12
   }
 });

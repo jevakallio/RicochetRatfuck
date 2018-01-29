@@ -7,10 +7,22 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import Game from './src/components/Game';
+import LaunchScreen from './src/components/LaunchScreen';
 
-export default class App extends Component<{}> {
+type State = {
+  isRunning: boolean
+};
+
+export default class App extends Component<*, State> {
+  state = {
+    isRunning: false
+  };
   render() {
-    return <Game />;
+    return true || this.state.isRunning ? (
+      <Game />
+    ) : (
+      <LaunchScreen start={() => this.setState({ isRunning: true })} />
+    );
   }
 }
 

@@ -1,9 +1,11 @@
 // @flow
 
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ImageBackground } from 'react-native';
 
 import Rat from './Rat';
+import Goal from './Goal';
+
 import type { Cell as CellType } from '../types';
 
 type Props = {
@@ -11,12 +13,15 @@ type Props = {
   max: number,
   row: number,
   col: number,
+  goalRat: number | null,
   cell: CellType
 };
 
+const background = require('../../assets/images/cell-background.png');
+
 export default class Cell extends React.Component<Props, *> {
   render() {
-    const { size, cell, col, row, max } = this.props;
+    const { size, cell, col, row, max, goalRat } = this.props;
     return (
       <View
         style={[
@@ -28,7 +33,11 @@ export default class Cell extends React.Component<Props, *> {
           (cell.left || col === 0) && styles.left
         ]}
       >
-        {cell.rat ? <Rat id={cell.rat} size={size * 0.8} /> : null}
+        {cell.rat ? (
+          <Rat id={cell.rat} size={size * 0.8} />
+        ) : goalRat ? (
+          <Goal id={goalRat} size={size * 0.5} />
+        ) : null}
       </View>
     );
   }
