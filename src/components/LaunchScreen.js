@@ -7,10 +7,14 @@ import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 const logo = require('../../assets/images/logo.png');
 
 type Props = {
-  start: () => void
+  start: () => void,
+  retry: boolean,
+  points: number
 };
-export default class Announcement extends React.Component<Props, *> {
+
+export default class LaunchScreen extends React.Component<Props, *> {
   render() {
+    const { retry, points } = this.props;
     return (
       <View style={styles.background}>
         <Animatable.View
@@ -20,15 +24,20 @@ export default class Announcement extends React.Component<Props, *> {
           iterationCount={10}
         >
           <Image source={logo} />
-          <Text style={styles.title}>{'Ricochet\nRatfuck'}</Text>
+          <Text style={styles.title}>
+            {retry ? `Game over\n${points} pts` : 'Ricochet\nRatfuck'}
+          </Text>
+
           <Text style={styles.description}>
-            These poor blind rat babies need food quick, or they'll starve. The
-            more you move and more you wait, the more energy you spend, so be
-            quick.
+            {retry
+              ? 'Game over. All the rats babies have died.'
+              : "These poor blind rat babies need food quick, or they'll starve. The more you move and more you wait, the more energy you spend, so be quick."}
           </Text>
 
           <TouchableOpacity style={styles.button} onPress={this.props.start}>
-            <Text style={styles.buttonText}>Get ratfucked</Text>
+            <Text style={styles.buttonText}>
+              {retry ? 'Try again' : 'Get ratfucked'}
+            </Text>
           </TouchableOpacity>
         </Animatable.View>
       </View>

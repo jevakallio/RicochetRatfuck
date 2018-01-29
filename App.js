@@ -10,18 +10,39 @@ import Game from './src/components/Game';
 import LaunchScreen from './src/components/LaunchScreen';
 
 type State = {
-  isRunning: boolean
+  isStarted: boolean,
+  isFinished: boolean,
+  points: number
 };
 
 export default class App extends Component<*, State> {
   state = {
-    isRunning: false
+    isStarted: false,
+    isFinished: false,
+    points: 0
   };
+
   render() {
-    return true || this.state.isRunning ? (
-      <Game />
+    return this.state.isStarted && !this.state.isFinished ? (
+      <Game
+        gameOver={points => {
+          this.setState({
+            isFinished: true,
+            points
+          });
+        }}
+      />
     ) : (
-      <LaunchScreen start={() => this.setState({ isRunning: true })} />
+      <LaunchScreen
+        retry={this.state.isFinished}
+        points={this.state.points}
+        start={() =>
+          this.setState({
+            isStarted: true,
+            isFinished: false
+          })
+        }
+      />
     );
   }
 }

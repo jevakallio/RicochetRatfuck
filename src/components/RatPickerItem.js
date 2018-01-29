@@ -28,7 +28,7 @@ export default class RatPickerItem extends React.Component<Props, *> {
     }
 
     // kill rat
-    if (points < 0 && this.props.points >= 0 && this._containerRef) {
+    if (points <= 0 && this.props.points > 0 && this._containerRef) {
       this._containerRef.fadeOutDown();
     }
   }

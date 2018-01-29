@@ -12,10 +12,13 @@ import { getRatColor } from '../colors';
 import type { Rat, Direction, Grid as GridType } from '../types';
 import { generateGrid, findRat, moveToRicochetPoint } from '../logic';
 
-type Props = {};
+type Props = {
+  gameOver: number => void
+};
 type State = {
   grid: GridType,
   rats: number[],
+  livingRats: number[],
   ratfucks: {
     lightsOut: boolean,
     rotate: number,
@@ -31,7 +34,7 @@ type State = {
 };
 
 const INITIAL_RATS = 4;
-
+const INITIAL_LIFE_POINTS = 3;
 // lights out
 // rotate
 // drunk
@@ -44,11 +47,13 @@ export default class Game extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const rats = range(1, INITIAL_RATS + 1);
-    const points = [0, ...rats.map(() => 10)];
+    const points = [0, ...rats.map(() => INITIAL_LIFE_POINTS)];
     const selectedRat = shuffle(rats)[0];
     this.state = {
       grid: generateGrid(INITIAL_RATS),
+      gameOver: false,
       rats,
+      livingRats: [...rats],
       ratfucks: {
         lightsOut: false,
         rotate: 0,
@@ -68,23 +73,45 @@ export default class Game extends React.Component<Props, State> {
     this._interval = setInterval(this.decrementPoints, 1000);
   }
 
+  componentWillUnmount() {
+    clearInterval(this._interval);
+  }
+
   selectRat = (id: number) => {
     this.setState({ selectedRat: id });
   };
 
   decrementPoints = () => {
+    let selectedRat = this.state.selectedRat;
+    let livingRats = this.state.livingRats;
+    let currentGoalIndex = this.state.currentGoalIndex;
+    let currentGoalRat = this.state.currentGoalRat;
+
     const updatedPoints = [...this.state.points];
-    const rat = this.state.selectedRat;
+    const rat = selectedRat;
     const ratPoints = updatedPoints[rat] - 1;
 
-    if (ratPoints % 10 === 0) {
-      // this.setState({
-      //   announcementTitle: this.state.announcementTitle + '!'
-      // });
+    if (ratPoints <= 0) {
+      const deadRat = selectedRat;
+      selectedRat = livingRats[0];
+      livingRats = livingRats.filter(id => id !== rat);
+      if (livingRats.length === 0) {
+        this.props.gameOver(this.state.totalPoints);
+        return;
+      }
+
+      if (deadRat === currentGoalRat) {
+        currentGoalIndex = currentGoalIndex + 1;
+        currentGoalRat = shuffle(livingRats)[0];
+      }
     }
 
     updatedPoints[rat] = ratPoints;
     this.setState({
+      selectedRat,
+      currentGoalIndex,
+      currentGoalRat,
+      livingRats,
       points: updatedPoints,
       totalPoints: this.state.totalPoints + 1
     });
@@ -106,10 +133,10 @@ export default class Game extends React.Component<Props, State> {
     const prev = findRat(grid, this.state.selectedRat);
     const next = moveToRicochetPoint(grid, prev, direction);
     if (!next || prev === next) {
-      this.setState({
-        announcementTitle: 'Oops',
-        announcementDescription: 'That is illegal'
-      });
+      // this.setState({
+      //   announcementTitle: 'Oops',
+      //   announcementDescription: 'That is illegal'
+      // });
       return;
     }
 
@@ -122,7 +149,7 @@ export default class Game extends React.Component<Props, State> {
       this.state.selectedRat === this.state.currentGoalRat
     ) {
       nextState.currentGoalIndex = this.state.currentGoalIndex + 1;
-      nextState.currentGoalRat = shuffle(this.state.rats)[0];
+      nextState.currentGoalRat = shuffle(this.state.livingRats)[0];
       this.incrementPoints();
     }
 
