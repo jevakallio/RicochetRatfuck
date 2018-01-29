@@ -6,22 +6,32 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
+  },
   "dependencies": {
+    "flow-bin": "0.61",
     "immer": "^0.8.5",
+    "lodash": "^4.17.4",
     "matter-js": "^0.14.1",
     "mobx": "^3.4.1",
     "mobx-react": "^4.3.5",
+    "moment": "^2.20.1",
     "react": "16.2.0",
     "react-game-kit": "^1.0.6",
     "react-native": "0.52.2",
     "react-native-animatable": "^1.2.4",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "styled-components": "^3.0.2"
+    "styled-components": "^3.0.2",
+    "transpose-matrix": "^1.2.0"
   },
   "devDependencies": {
     "babel-jest": "22.1.0",
     "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.16.0",
     "jest": "22.1.4",
     "react-test-renderer": "16.2.0"
   },
